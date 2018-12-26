@@ -8,7 +8,7 @@ import android.util.Log;
 import com.yyxnb.xcode.LocalConfig;
 import com.yyxnb.xcode.data.AudioLoader;
 import com.yyxnb.xcode.data.DataCallback;
-import com.yyxnb.xcode.entity.Folder;
+import com.yyxnb.xcode.entity.LocalFolder;
 
 import java.util.ArrayList;
 
@@ -36,8 +36,8 @@ public class MainActivity extends AppCompatActivity implements DataCallback {
     }
 
     @Override
-    public void onData(ArrayList<Folder> list) {
+    public void onData(ArrayList<LocalFolder> list) {
 
-        Log.d("---",""+list.get(0).getMedias().size());
+        Log.d("---",""+list.get(0).getLocalMedia().size());
     }
 }

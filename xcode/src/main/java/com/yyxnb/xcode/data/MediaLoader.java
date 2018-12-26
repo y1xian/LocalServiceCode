@@ -11,8 +11,8 @@ import android.provider.MediaStore;
 
 import com.yyxnb.xcode.LocalConfig;
 import com.yyxnb.xcode.R;
-import com.yyxnb.xcode.entity.Folder;
-import com.yyxnb.xcode.entity.Media;
+import com.yyxnb.xcode.entity.LocalFolder;
+import com.yyxnb.xcode.entity.LocalMedia;
 
 import java.util.ArrayList;
 
@@ -63,11 +63,11 @@ public class MediaLoader extends LoaderM implements LoaderManager.LoaderCallback
     @Override
     public void onLoadFinished(Loader loader, Cursor cursor) {
         try {
-            ArrayList<Folder> folders = new ArrayList<>();
-            Folder allFolder = new Folder(mContext.getResources().getString(R.string.all_dir_name));
-            folders.add(allFolder);
-            Folder allVideoDir = new Folder(mContext.getResources().getString(R.string.video_dir_name));
-            folders.add(allVideoDir);
+            ArrayList<LocalFolder> localFolders = new ArrayList<>();
+            LocalFolder allLocalFolder = new LocalFolder(mContext.getResources().getString(R.string.all_dir_name));
+            localFolders.add(allLocalFolder);
+            LocalFolder allVideoDir = new LocalFolder(mContext.getResources().getString(R.string.video_dir_name));
+            localFolders.add(allVideoDir);
             while (cursor.moveToNext()) {
                 String title = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Files.FileColumns.TITLE));
                 String path = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Files.FileColumns.DATA));
@@ -92,32 +92,32 @@ public class MediaLoader extends LoaderM implements LoaderManager.LoaderCallback
 //                Log.d("VideoLoader", name + "," +  mimeType);
 
                 String dirName = getParent(path);
-                Media media = new Media();
-                media.setTitle(title);
-                media.setPath(path);
-                media.setName(name);
-                media.setTime(dateTime);
-                media.setMediaType(mediaType);
-                media.setSize(size);
-                media.setId(id);
-                media.setParentDir(dirName);
-                media.setDuration(duration);
-                media.setMimeType(mimeType);
-                allFolder.addMedias(media);
+                LocalMedia localMedia = new LocalMedia();
+                localMedia.setTitle(title);
+                localMedia.setPath(path);
+                localMedia.setName(name);
+                localMedia.setTime(dateTime);
+                localMedia.setMediaType(mediaType);
+                localMedia.setSize(size);
+                localMedia.setId(id);
+                localMedia.setParentDir(dirName);
+                localMedia.setDuration(duration);
+                localMedia.setMimeType(mimeType);
+                allLocalFolder.addMedias(localMedia);
                 if (mediaType == 3) {
-                    allVideoDir.addMedias(media);
+                    allVideoDir.addMedias(localMedia);
                 }
 
-                int index = hasDir(folders, dirName);
+                int index = hasDir(localFolders, dirName);
                 if (index != -1) {
-                    folders.get(index).addMedias(media);
+                    localFolders.get(index).addMedias(localMedia);
                 } else {
-                    Folder folder = new Folder(dirName);
-                    folder.addMedias(media);
-                    folders.add(folder);
+                    LocalFolder localFolder = new LocalFolder(dirName);
+                    localFolder.addMedias(localMedia);
+                    localFolders.add(localFolder);
                 }
             }
-            mLoader.onData(folders);
+            mLoader.onData(localFolders);
             cursor.close();
         } catch (Exception e) {
             e.printStackTrace();

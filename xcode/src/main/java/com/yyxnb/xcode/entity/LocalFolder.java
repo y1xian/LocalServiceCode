@@ -3,24 +3,24 @@ package com.yyxnb.xcode.entity;
 import java.util.ArrayList;
 
 
-public class Folder {
+public class LocalFolder {
 
     public String name;
 
     public int count;
 
-    ArrayList<Media> medias = new ArrayList<>();
+    ArrayList<LocalMedia> localMedia = new ArrayList<>();
 
-    public void addMedias(Media media) {
-        medias.add(media);
+    public void addMedias(LocalMedia localMedia) {
+        this.localMedia.add(localMedia);
     }
 
-    public Folder(String name) {
+    public LocalFolder(String name) {
         this.name = name;
     }
 
-    public ArrayList<Media> getMedias() {
-        return this.medias;
+    public ArrayList<LocalMedia> getLocalMedia() {
+        return this.localMedia;
     }
 
     public String getName() {
@@ -39,7 +39,7 @@ public class Folder {
         this.count = count;
     }
 
-    public void setMedias(ArrayList<Media> medias) {
-        this.medias = medias;
+    public void setLocalMedia(ArrayList<LocalMedia> localMedia) {
+        this.localMedia = localMedia;
     }
 }

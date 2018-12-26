@@ -1,7 +1,7 @@
 package com.yyxnb.xcode.data;
 
 
-import com.yyxnb.xcode.entity.Folder;
+import com.yyxnb.xcode.entity.LocalFolder;
 
 import java.util.ArrayList;
 
@@ -12,6 +12,6 @@ import java.util.ArrayList;
 public interface DataCallback {
 
 
-    void onData(ArrayList<Folder> list);
+    void onData(ArrayList<LocalFolder> list);
 
 }

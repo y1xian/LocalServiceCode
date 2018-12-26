@@ -10,8 +10,8 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 
 import com.yyxnb.xcode.R;
-import com.yyxnb.xcode.entity.Folder;
-import com.yyxnb.xcode.entity.Media;
+import com.yyxnb.xcode.entity.LocalFolder;
+import com.yyxnb.xcode.entity.LocalMedia;
 
 import java.util.ArrayList;
 
@@ -56,9 +56,9 @@ public class AudioLoader extends LoaderM implements LoaderManager.LoaderCallback
     @Override
     public void onLoadFinished(Loader loader, Cursor cursor) {
         try {
-            ArrayList<Folder> folders = new ArrayList<>();
-            Folder allFolder = new Folder(mContext.getResources().getString(R.string.all_audio));
-            folders.add(allFolder);
+            ArrayList<LocalFolder> localFolders = new ArrayList<>();
+            LocalFolder allLocalFolder = new LocalFolder(mContext.getResources().getString(R.string.all_audio));
+            localFolders.add(allLocalFolder);
             while (cursor.moveToNext()) {
                 String title = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.TITLE));
                 String path = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA));
@@ -81,30 +81,30 @@ public class AudioLoader extends LoaderM implements LoaderManager.LoaderCallback
 //                Log.d("AudioLoader", name + "," + mediaType + "。"+ mimeType);
 
                 String dirName = getParent(path);
-                Media media = new Media();
-                media.setTitle(title);
-                media.setPath(path);
-                media.setName(name);
-                media.setTime(dateTime);
-                media.setSize(size);
-                media.setId(id);
-                media.setMediaType(mediaType);
-                media.setParentDir(dirName);
-                media.setArtist(artist);
-                media.setMimeType(mimeType);
-                media.setDuration(duration);
-                allFolder.addMedias(media);
+                LocalMedia localMedia = new LocalMedia();
+                localMedia.setTitle(title);
+                localMedia.setPath(path);
+                localMedia.setName(name);
+                localMedia.setTime(dateTime);
+                localMedia.setSize(size);
+                localMedia.setId(id);
+                localMedia.setMediaType(mediaType);
+                localMedia.setParentDir(dirName);
+                localMedia.setArtist(artist);
+                localMedia.setMimeType(mimeType);
+                localMedia.setDuration(duration);
+                allLocalFolder.addMedias(localMedia);
 
-                int index = hasDir(folders, dirName);
+                int index = hasDir(localFolders, dirName);
                 if (index != -1) {
-                    folders.get(index).addMedias(media);
+                    localFolders.get(index).addMedias(localMedia);
                 } else {
-                    Folder folder = new Folder(dirName);
-                    folder.addMedias(media);
-                    folders.add(folder);
+                    LocalFolder localFolder = new LocalFolder(dirName);
+                    localFolder.addMedias(localMedia);
+                    localFolders.add(localFolder);
                 }
             }
-            mLoader.onData(folders);
+            mLoader.onData(localFolders);
             cursor.close();
         } catch (Exception e) {
             e.printStackTrace();

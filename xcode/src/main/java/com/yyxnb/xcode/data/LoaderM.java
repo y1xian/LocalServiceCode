@@ -1,6 +1,6 @@
 package com.yyxnb.xcode.data;
 
-import com.yyxnb.xcode.entity.Folder;
+import com.yyxnb.xcode.entity.LocalFolder;
 
 import java.util.ArrayList;
 
@@ -12,10 +12,10 @@ public class LoaderM {
         return sp[sp.length - 2];
     }
 
-    public int hasDir(ArrayList<Folder> folders, String dirName) {
-        for (int i = 0; i < folders.size(); i++) {
-            Folder folder = folders.get(i);
-            if (folder.name.equals(dirName)) {
+    public int hasDir(ArrayList<LocalFolder> localFolders, String dirName) {
+        for (int i = 0; i < localFolders.size(); i++) {
+            LocalFolder localFolder = localFolders.get(i);
+            if (localFolder.name.equals(dirName)) {
                 return i;
             }
         }

@@ -10,8 +10,8 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 
 import com.yyxnb.xcode.R;
-import com.yyxnb.xcode.entity.Folder;
-import com.yyxnb.xcode.entity.Media;
+import com.yyxnb.xcode.entity.LocalFolder;
+import com.yyxnb.xcode.entity.LocalMedia;
 
 import java.util.ArrayList;
 
@@ -54,9 +54,9 @@ public class ImageLoader extends LoaderM implements LoaderManager.LoaderCallback
     @Override
     public void onLoadFinished(Loader loader, Cursor cursor) {
         try {
-            ArrayList<Folder> folders = new ArrayList<>();
-            Folder allFolder = new Folder(mContext.getResources().getString(R.string.all_image));
-            folders.add(allFolder);
+            ArrayList<LocalFolder> localFolders = new ArrayList<>();
+            LocalFolder allLocalFolder = new LocalFolder(mContext.getResources().getString(R.string.all_image));
+            localFolders.add(allLocalFolder);
             while (cursor.moveToNext()) {
 
                 String title = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.TITLE));
@@ -78,28 +78,28 @@ public class ImageLoader extends LoaderM implements LoaderManager.LoaderCallback
 //                Log.d("ImageLoader", mediaType +" ， "+mimeType + " ,dateTime "+ dateTime);
 
                 String dirName = getParent(path);
-                Media media = new Media();
-                media.setPath(path);
-                media.setTitle(title);
-                media.setName(name);
-                media.setTime(dateTime);
-                media.setMediaType(mediaType);
-                media.setSize(size);
-                media.setId(id);
-                media.setParentDir(dirName);
-                media.setMimeType(mimeType);
-                allFolder.addMedias(media);
+                LocalMedia localMedia = new LocalMedia();
+                localMedia.setPath(path);
+                localMedia.setTitle(title);
+                localMedia.setName(name);
+                localMedia.setTime(dateTime);
+                localMedia.setMediaType(mediaType);
+                localMedia.setSize(size);
+                localMedia.setId(id);
+                localMedia.setParentDir(dirName);
+                localMedia.setMimeType(mimeType);
+                allLocalFolder.addMedias(localMedia);
 
-                int index = hasDir(folders, dirName);
+                int index = hasDir(localFolders, dirName);
                 if (index != -1) {
-                    folders.get(index).addMedias(media);
+                    localFolders.get(index).addMedias(localMedia);
                 } else {
-                    Folder folder = new Folder(dirName);
-                    folder.addMedias(media);
-                    folders.add(folder);
+                    LocalFolder localFolder = new LocalFolder(dirName);
+                    localFolder.addMedias(localMedia);
+                    localFolders.add(localFolder);
                 }
             }
-            mLoader.onData(folders);
+            mLoader.onData(localFolders);
             cursor.close();
         } catch (Exception e) {
             e.printStackTrace();

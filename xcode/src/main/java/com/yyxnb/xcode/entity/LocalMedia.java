@@ -3,7 +3,7 @@ package com.yyxnb.xcode.entity;
 import android.text.TextUtils;
 
 
-public class Media {
+public class LocalMedia {
 
     private String path; // 文件路径
     private String name; // 文件名称
