@@ -18,7 +18,7 @@ import java.util.ArrayList;
 /**
  * 音频 音乐
  */
-public class AudioLoader extends LoaderM implements LoaderManager.LoaderCallbacks<Cursor> {
+public class AudioLoaderManager extends LoaderM implements LoaderManager.LoaderCallbacks<Cursor> {
     String[] MEDIA_PROJECTION = {
             MediaStore.Audio.Media._ID,
             MediaStore.Audio.Media.TITLE,
@@ -33,7 +33,7 @@ public class AudioLoader extends LoaderM implements LoaderManager.LoaderCallback
     Context mContext;
     DataCallback mLoader;
 
-    public AudioLoader(Context context, DataCallback loader) {
+    public AudioLoaderManager(Context context, DataCallback loader) {
         this.mContext = context;
         this.mLoader = loader;
     }
@@ -78,7 +78,7 @@ public class AudioLoader extends LoaderM implements LoaderManager.LoaderCallback
                     continue;
                 }
 
-//                Log.d("AudioLoader", name + "," + mediaType + "。"+ mimeType);
+//                Log.d("AudioLoaderManager", name + "," + mediaType + "。"+ mimeType);
 
                 String dirName = getParent(path);
                 LocalMedia localMedia = new LocalMedia();

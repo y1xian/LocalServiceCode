@@ -1,9 +1,14 @@
 package com.yyxnb.xcode.entity;
 
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.text.TextUtils;
 
+import java.io.Serializable;
+import java.util.Objects;
 
-public class LocalMedia {
+
+public class LocalMedia implements Serializable {
 
     private String path; // 文件路径
     private String name; // 文件名称
@@ -117,5 +122,36 @@ public class LocalMedia {
 
     public void setParentDir(String parentDir) {
         this.parentDir = parentDir;
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof LocalMedia)) {
+            return false;
+        }
+        LocalMedia that = (LocalMedia) o;
+        return getTime() == that.getTime() &&
+                getMediaType() == that.getMediaType() &&
+                getSize() == that.getSize() &&
+                getDuration() == that.getDuration() &&
+                getId() == that.getId() &&
+                Objects.equals(getPath(), that.getPath()) &&
+                Objects.equals(getName(), that.getName()) &&
+                Objects.equals(getExtension(), that.getExtension()) &&
+                Objects.equals(getParentDir(), that.getParentDir()) &&
+                Objects.equals(getMimeType(), that.getMimeType()) &&
+                Objects.equals(getArtist(), that.getArtist()) &&
+                Objects.equals(getTitle(), that.getTitle());
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(getPath(), getName(), getExtension(), getTime(), getMediaType(), getSize(), getDuration(), getId(), getParentDir(), getMimeType(), getArtist(), getTitle());
     }
 }

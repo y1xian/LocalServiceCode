@@ -1,6 +1,8 @@
 package com.yyxnb.xcode;
 
-public class LocalConfig {
+import java.io.Serializable;
+
+public class LocalConfig implements Serializable {
 
     /**
      * 最大图片选择次数，int类型，默认9
@@ -41,4 +43,10 @@ public class LocalConfig {
     public static final int IMAGE_VIDEO = 0x101;
     public static int GridSpanCount = 3;
     public static int GridSpace = 4;
+
+
+    public static class Builder implements Serializable {
+
+    }
+
 }

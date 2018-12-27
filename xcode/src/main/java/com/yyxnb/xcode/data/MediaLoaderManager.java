@@ -17,9 +17,9 @@ import com.yyxnb.xcode.entity.LocalMedia;
 import java.util.ArrayList;
 
 /**
- * 视频
+ * 图片 + 视频
  */
-public class VideoLoader extends LoaderM implements LoaderManager.LoaderCallbacks<Cursor> {
+public class MediaLoaderManager extends LoaderM implements LoaderManager.LoaderCallbacks<Cursor> {
     String[] MEDIA_PROJECTION = {
             MediaStore.Files.FileColumns.TITLE,
             MediaStore.Files.FileColumns.DATA,
@@ -35,14 +35,17 @@ public class VideoLoader extends LoaderM implements LoaderManager.LoaderCallback
     Context mContext;
     DataCallback mLoader;
 
-    public VideoLoader(Context context, DataCallback loader) {
+    public MediaLoaderManager(Context context, DataCallback loader) {
         this.mContext = context;
         this.mLoader = loader;
     }
 
     @Override
-    public Loader<Cursor> onCreateLoader(int picker_type, Bundle bundle) {
+    public Loader onCreateLoader(int picker_type, Bundle bundle) {
         String selection = MediaStore.Files.FileColumns.MEDIA_TYPE + "="
+                + MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE
+                + " OR "
+                + MediaStore.Files.FileColumns.MEDIA_TYPE + "="
                 + MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO;
 
         Uri queryUri = MediaStore.Files.getContentUri("external");
@@ -61,8 +64,10 @@ public class VideoLoader extends LoaderM implements LoaderManager.LoaderCallback
     public void onLoadFinished(Loader loader, Cursor cursor) {
         try {
             ArrayList<LocalFolder> localFolders = new ArrayList<>();
-            LocalFolder allLocalFolder = new LocalFolder(mContext.getResources().getString(R.string.all_video));
+            LocalFolder allLocalFolder = new LocalFolder(mContext.getResources().getString(R.string.all_dir_name));
             localFolders.add(allLocalFolder);
+            LocalFolder allVideoDir = new LocalFolder(mContext.getResources().getString(R.string.video_dir_name));
+            localFolders.add(allVideoDir);
             while (cursor.moveToNext()) {
                 String title = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Files.FileColumns.TITLE));
                 String path = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Files.FileColumns.DATA));
@@ -84,6 +89,8 @@ public class VideoLoader extends LoaderM implements LoaderManager.LoaderCallback
                     continue;
                 }
 
+//                Log.d("VideoLoaderManager", name + "," +  mimeType);
+
                 String dirName = getParent(path);
                 LocalMedia localMedia = new LocalMedia();
                 localMedia.setTitle(title);
@@ -97,6 +104,9 @@ public class VideoLoader extends LoaderM implements LoaderManager.LoaderCallback
                 localMedia.setDuration(duration);
                 localMedia.setMimeType(mimeType);
                 allLocalFolder.addMedias(localMedia);
+                if (mediaType == 3) {
+                    allVideoDir.addMedias(localMedia);
+                }
 
                 int index = hasDir(localFolders, dirName);
                 if (index != -1) {

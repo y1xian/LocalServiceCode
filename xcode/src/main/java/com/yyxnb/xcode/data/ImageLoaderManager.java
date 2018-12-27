@@ -18,7 +18,7 @@ import java.util.ArrayList;
 /**
  * 图片
  */
-public class ImageLoader extends LoaderM implements LoaderManager.LoaderCallbacks<Cursor> {
+public class ImageLoaderManager extends LoaderM implements LoaderManager.LoaderCallbacks<Cursor> {
 
     String[] IMAGE_PROJECTION = {
             MediaStore.Images.Media.TITLE,
@@ -32,7 +32,7 @@ public class ImageLoader extends LoaderM implements LoaderManager.LoaderCallback
     Context mContext;
     DataCallback mLoader;
 
-    public ImageLoader(Context context, DataCallback loader) {
+    public ImageLoaderManager(Context context, DataCallback loader) {
         this.mContext = context;
         this.mLoader = loader;
     }
@@ -75,7 +75,7 @@ public class ImageLoader extends LoaderM implements LoaderManager.LoaderCallback
                     continue;
                 }
 
-//                Log.d("ImageLoader", mediaType +" ， "+mimeType + " ,dateTime "+ dateTime);
+//                Log.d("ImageLoaderManager", mediaType +" ， "+mimeType + " ,dateTime "+ dateTime);
 
                 String dirName = getParent(path);
                 LocalMedia localMedia = new LocalMedia();

@@ -6,7 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import com.yyxnb.xcode.LocalConfig;
-import com.yyxnb.xcode.data.AudioLoader;
+import com.yyxnb.xcode.data.AudioLoaderManager;
 import com.yyxnb.xcode.data.DataCallback;
 import com.yyxnb.xcode.entity.LocalFolder;
 
@@ -28,7 +28,7 @@ public class MainActivity extends AppCompatActivity implements DataCallback {
     void getMediaData() {
         if (EasyPermissions.hasPermissions(this, Manifest.permission.READ_EXTERNAL_STORAGE)) {
 
-            getLoaderManager().initLoader(LocalConfig.AUDIO, null, new AudioLoader(this, this));
+            getLoaderManager().initLoader(LocalConfig.AUDIO, null, new AudioLoaderManager(this, this));
 
         } else {
             EasyPermissions.requestPermissions(this, getString(R.string.READ_EXTERNAL_STORAGE), 119, Manifest.permission.READ_EXTERNAL_STORAGE);

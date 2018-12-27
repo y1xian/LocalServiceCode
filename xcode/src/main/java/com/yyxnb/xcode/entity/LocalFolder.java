@@ -1,9 +1,14 @@
 package com.yyxnb.xcode.entity;
 
+import android.os.Build;
+import android.support.annotation.RequiresApi;
+
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Objects;
 
 
-public class LocalFolder {
+public class LocalFolder implements Serializable {
 
     public String name;
 
@@ -41,5 +46,27 @@ public class LocalFolder {
 
     public void setLocalMedia(ArrayList<LocalMedia> localMedia) {
         this.localMedia = localMedia;
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof LocalFolder)) {
+            return false;
+        }
+        LocalFolder that = (LocalFolder) o;
+        return getCount() == that.getCount() &&
+                Objects.equals(getName(), that.getName()) &&
+                Objects.equals(getLocalMedia(), that.getLocalMedia());
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(getName(), getCount(), getLocalMedia());
     }
 }
