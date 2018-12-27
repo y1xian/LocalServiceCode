@@ -22,30 +22,8 @@ public class LocalMedia implements Serializable {
     private String mimeType; //文件的MIME类型
     private String artist; // 艺术家
     private String title; // 显示名称
-
-    public String getArtist() {
-        return artist;
-    }
-
-    public void setArtist(String artist) {
-        this.artist = artist;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getMimeType() {
-        return mimeType;
-    }
-
-    public void setMimeType(String mimeType) {
-        this.mimeType = mimeType;
-    }
+    private int selectPosition; //当图片选择后，索引值
+    private int position; //当前图片在列表中顺序
 
     public String getPath() {
         return path;
@@ -61,11 +39,6 @@ public class LocalMedia implements Serializable {
 
     public void setName(String name) {
         this.name = name;
-        if (!TextUtils.isEmpty(name) && name.indexOf(".") != -1) {
-            this.extension = name.substring(name.lastIndexOf("."), name.length());
-        } else {
-            this.extension = "null";
-        }
     }
 
     public String getExtension() {
@@ -124,6 +97,46 @@ public class LocalMedia implements Serializable {
         this.parentDir = parentDir;
     }
 
+    public String getMimeType() {
+        return mimeType;
+    }
+
+    public void setMimeType(String mimeType) {
+        this.mimeType = mimeType;
+    }
+
+    public String getArtist() {
+        return artist;
+    }
+
+    public void setArtist(String artist) {
+        this.artist = artist;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public int getSelectPosition() {
+        return selectPosition;
+    }
+
+    public void setSelectPosition(int selectPosition) {
+        this.selectPosition = selectPosition;
+    }
+
+    public int getPosition() {
+        return position;
+    }
+
+    public void setPosition(int position) {
+        this.position = position;
+    }
+
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     public boolean equals(Object o) {
@@ -139,6 +152,8 @@ public class LocalMedia implements Serializable {
                 getSize() == that.getSize() &&
                 getDuration() == that.getDuration() &&
                 getId() == that.getId() &&
+                getSelectPosition() == that.getSelectPosition() &&
+                getPosition() == that.getPosition() &&
                 Objects.equals(getPath(), that.getPath()) &&
                 Objects.equals(getName(), that.getName()) &&
                 Objects.equals(getExtension(), that.getExtension()) &&
@@ -152,6 +167,6 @@ public class LocalMedia implements Serializable {
     @Override
     public int hashCode() {
 
-        return Objects.hash(getPath(), getName(), getExtension(), getTime(), getMediaType(), getSize(), getDuration(), getId(), getParentDir(), getMimeType(), getArtist(), getTitle());
+        return Objects.hash(getPath(), getName(), getExtension(), getTime(), getMediaType(), getSize(), getDuration(), getId(), getParentDir(), getMimeType(), getArtist(), getTitle(), getSelectPosition(), getPosition());
     }
 }
