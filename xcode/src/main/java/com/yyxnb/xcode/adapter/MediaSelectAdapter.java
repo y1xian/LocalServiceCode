@@ -3,6 +3,7 @@ package com.yyxnb.xcode.adapter;
 import android.content.Context;
 import android.graphics.PorterDuff;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,25 +13,21 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.yyxnb.xcode.ImageSelectObservable;
+import com.yyxnb.xcode.LocalConfig;
 import com.yyxnb.xcode.R;
 import com.yyxnb.xcode.entity.LocalMedia;
+import com.yyxnb.xcode.utils.DateUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class MediaSelectAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    /**
-     * 标注是否是单选图片模式
-     */
-    private boolean mIsSelectSingleImge = false;
-
     private Context mContext;
 
     private LayoutInflater mInflater;
 
-    private int maxCount = 9;
+    private LocalConfig mConfig;
 
     /**
      * 数据源
@@ -48,9 +45,10 @@ public class MediaSelectAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         this.onItemClickListener = onItemClickListener;
     }
 
-    public MediaSelectAdapter(Context mContext, List<LocalMedia> mData) {
+    public MediaSelectAdapter(Context mContext, LocalConfig mConfig, List<LocalMedia> mData) {
         this.mContext = mContext;
         this.mData = mData;
+        this.mConfig = mConfig;
         this.mInflater = LayoutInflater.from(mContext);
 
 //        mSelectlist = ImageSelectObservable.getInstance().getSelectImages();
@@ -67,8 +65,13 @@ public class MediaSelectAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         LocalMedia media = mData.get(position);
         media.setPosition(viewHolder.getAdapterPosition());
 
-        Glide.with(mContext).load(media.getPath()).into(viewHolder.ivPic);
+        Glide.with(mContext).load(media.getPath()).centerCrop().into(viewHolder.ivPic);
         nitifyCheckChanged(viewHolder, media);
+
+//        if ("video".contains(media.getMimeType())){
+//        }
+        viewHolder.tvDuration.setVisibility(media.getMimeType().contains("video") ? View.VISIBLE : View.GONE);
+        viewHolder.tvDuration.setText(DateUtils.timeParse(media.getDuration()));
 
         /*点击监听*/
         setSelectOnClickListener(viewHolder.tvChecked, media, viewHolder.getAdapterPosition());
@@ -84,12 +87,14 @@ public class MediaSelectAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
         public ImageView ivPic;
         public TextView tvChecked;
+        public TextView tvDuration;
 
         public ViewHolder(View convertView) {
             super(convertView);
 
             ivPic = convertView.findViewById(R.id.ivPic);
             tvChecked = convertView.findViewById(R.id.tvSelect);
+            tvDuration = convertView.findViewById(R.id.tvDuration);
         }
     }
 
@@ -100,7 +105,7 @@ public class MediaSelectAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
      * @param media      LocalMedia
      */
     private void nitifyCheckChanged(ViewHolder viewHolder, LocalMedia media) {
-        if (mIsSelectSingleImge) { //单选模式，不显示选择按钮
+        if (mConfig.isIsSelectSingle()) { //单选模式，不显示选择按钮
             viewHolder.tvChecked.setVisibility(View.INVISIBLE);
         } else {
             if (mSelectlist.contains(media)) {  //当已选列表里包括当前item时，选择状态为已选，并显示在选择列表里的位置
@@ -108,11 +113,13 @@ public class MediaSelectAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 viewHolder.tvChecked.setText(String.valueOf(media.getSelectPosition()));
                 viewHolder.ivPic.setColorFilter(ContextCompat.getColor
                         (mContext, R.color.image_overlay_true), PorterDuff.Mode.SRC_ATOP);
+                zoomOut(viewHolder.ivPic);
             } else {
                 viewHolder.tvChecked.setSelected(false);
                 viewHolder.tvChecked.setText("");
                 viewHolder.ivPic.setColorFilter(ContextCompat.getColor
                         (mContext, R.color.image_overlay_false), PorterDuff.Mode.SRC_ATOP);
+                zoomIn(viewHolder.ivPic);
             }
         }
     }
@@ -134,7 +141,7 @@ public class MediaSelectAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     mSelectlist.remove(media);
                     subSelectPosition();
                 } else { //不在选择列表里，添加
-                    if (mSelectlist.size() >= maxCount) {
+                    if (mSelectlist.size() >= mConfig.getMaxCount()) {
                         Toast.makeText(mContext, mContext.getResources().getString(R.string.msg_amount_limit), Toast.LENGTH_SHORT).show();
                         return;
                     }
@@ -166,7 +173,11 @@ public class MediaSelectAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             @Override
             public void onClick(View v) {
                 if (onItemClickListener != null) {
-                    if (mIsSelectSingleImge) {
+                    if (mConfig.isIsSelectSingle()) {
+                        mSelectlist.clear();
+                        mSelectlist.add(mData.get(position));
+//                        mSelectlist.set(0, mData.get(position));
+                    } else {
                         mSelectlist.add(mData.get(position));
                     }
                     onItemClickListener.onItemClick(v, position);
@@ -201,4 +212,13 @@ public class MediaSelectAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     public interface OnItemClickListener {
         void onItemClick(View view, int position);
     }
+
+    private void zoomIn(View v) {
+        ViewCompat.animate(v).setDuration(300L).scaleX(1.0f).scaleY(1.0f).start();
+    }
+
+    private void zoomOut(View v) {
+        ViewCompat.animate(v).setDuration(300L).scaleX(0.9f).scaleY(0.9f).start();
+    }
+
 }

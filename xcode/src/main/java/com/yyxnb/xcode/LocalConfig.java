@@ -5,13 +5,6 @@ import java.io.Serializable;
 public class LocalConfig implements Serializable {
 
     /**
-     * 最大图片选择次数，int类型，默认9
-     */
-    public static final String MAX_SELECT_COUNT = "max_select_count";
-
-    public static final int DEFAULT_SELECTED_MAX_COUNT = 9;
-
-    /**
      * 最大文件大小，int类型，默认180m
      */
     public static final String MAX_SELECT_SIZE = "max_select_size";
@@ -41,12 +34,26 @@ public class LocalConfig implements Serializable {
     public static final int VIDEO = 0x102;
     public static final int AUDIO = 0x103;
     public static final int IMAGE_VIDEO = 0x101;
-    public static int GridSpanCount = 3;
-    public static int GridSpace = 4;
 
+    private int mMaxCount = 9; //最大选择数量
+    private boolean mIsSelectSingle = false; //是否是单选 默认false
 
-    public static class Builder implements Serializable {
+    public boolean isIsSelectSingle() {
+        return mIsSelectSingle;
+    }
 
+    public LocalConfig setIsSelectSingle(boolean mIsSelectSingle) {
+        this.mIsSelectSingle = mIsSelectSingle;
+        return this;
+    }
+
+    public int getMaxCount() {
+        return mMaxCount;
+    }
+
+    public LocalConfig setMaxCount(int maxCount) {
+        this.mMaxCount = maxCount;
+        return this;
     }
 
 }

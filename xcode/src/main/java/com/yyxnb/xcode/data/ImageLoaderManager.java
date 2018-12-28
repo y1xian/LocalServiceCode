@@ -1,19 +1,20 @@
 package com.yyxnb.xcode.data;
 
-import android.app.LoaderManager;
 import android.content.Context;
-import android.content.CursorLoader;
-import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 
 import com.yyxnb.xcode.R;
 import com.yyxnb.xcode.entity.LocalFolder;
 import com.yyxnb.xcode.entity.LocalMedia;
 
 import java.util.ArrayList;
+
 
 /**
  * 图片
@@ -50,6 +51,7 @@ public class ImageLoaderManager extends LoaderM implements LoaderManager.LoaderC
         );
         return cursorLoader;
     }
+
 
     @Override
     public void onLoadFinished(Loader loader, Cursor cursor) {
