@@ -68,14 +68,12 @@ public class MediaSelectAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         Glide.with(mContext).load(media.getPath()).centerCrop().into(viewHolder.ivPic);
         nitifyCheckChanged(viewHolder, media);
 
-//        if ("video".contains(media.getMimeType())){
-//        }
         viewHolder.tvDuration.setVisibility(media.getMimeType().contains("video") ? View.VISIBLE : View.GONE);
         viewHolder.tvDuration.setText(DateUtils.timeParse(media.getDuration()));
 
         /*点击监听*/
-        setSelectOnClickListener(viewHolder.tvChecked, media, viewHolder.getAdapterPosition());
-        setOnItemClickListener(viewHolder.ivPic, viewHolder.getAdapterPosition());
+        initSelectOnClickListener(viewHolder.tvChecked, media, viewHolder.getAdapterPosition());
+        initOnItemClickListener(viewHolder);
     }
 
     @Override
@@ -132,7 +130,7 @@ public class MediaSelectAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
      * @param media    对应的实体类
      * @param position 点击位置
      */
-    private void setSelectOnClickListener(View view, final LocalMedia media, final int position) {
+    private void initSelectOnClickListener(View view, final LocalMedia media, final int position) {
 
         View.OnClickListener listener = new View.OnClickListener() {
             @Override
@@ -165,26 +163,19 @@ public class MediaSelectAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     /**
      * item点击监听，多选时查看大图，单选时返回选择图片
      *
-     * @param view     点击view
-     * @param position 点击位置
+//     * @param view     点击view
+//     * @param position 点击位置
      */
-    private void setOnItemClickListener(View view, final int position) {
+    private void initOnItemClickListener(final ViewHolder viewHolder) {
         View.OnClickListener listener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (onItemClickListener != null) {
-                    if (mConfig.isIsSelectSingle()) {
-                        mSelectlist.clear();
-                        mSelectlist.add(mData.get(position));
-//                        mSelectlist.set(0, mData.get(position));
-                    } else {
-                        mSelectlist.add(mData.get(position));
-                    }
-                    onItemClickListener.onItemClick(v, position);
+                    onItemClickListener.onItemClick(v, viewHolder.getAdapterPosition());
                 }
             }
         };
-        view.setOnClickListener(listener);
+        viewHolder.ivPic.setOnClickListener(listener);
     }
 
 

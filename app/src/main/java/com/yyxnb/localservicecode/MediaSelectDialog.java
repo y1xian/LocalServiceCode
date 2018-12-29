@@ -11,7 +11,7 @@ import android.widget.TextView;
 import com.yyxnb.xcode.LocalConfig;
 import com.yyxnb.xcode.adapter.MediaSelectAdapter;
 import com.yyxnb.xcode.data.DataCallback;
-import com.yyxnb.xcode.data.VideoLoaderManager;
+import com.yyxnb.xcode.data.ImageLoaderManager;
 import com.yyxnb.xcode.entity.LocalFolder;
 import com.yyxnb.xcode.entity.LocalMedia;
 import com.yyxnb.yyxarch.utils.ScreenUtils;
@@ -53,8 +53,8 @@ public class MediaSelectDialog extends BaseSheetDialog<MediaSelectDialog> implem
         });
 
         LocalConfig localConfig = new LocalConfig();
-        localConfig.setMaxCount(1);
-//        localConfig.setIsSelectSingle(true);
+        localConfig.setMaxCount(6);
+        localConfig.setIsSelectSingle(false);
 
         mAdapter = new MediaSelectAdapter(getContext(),localConfig, mData);
         mRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
@@ -80,7 +80,7 @@ public class MediaSelectDialog extends BaseSheetDialog<MediaSelectDialog> implem
     void getMediaData() {
         if (EasyPermissions.hasPermissions(getContext(), Manifest.permission.READ_EXTERNAL_STORAGE)) {
 
-            getLoaderManager().initLoader(LocalConfig.VIDEO, null, new VideoLoaderManager(getActivity(), this));
+            getLoaderManager().initLoader(LocalConfig.IMAGE, null, new ImageLoaderManager(getActivity(), this));
 
         } else {
             EasyPermissions.requestPermissions(this, getString(R.string.READ_EXTERNAL_STORAGE), 119, Manifest.permission.READ_EXTERNAL_STORAGE);
